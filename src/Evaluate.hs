@@ -51,12 +51,14 @@ coq fn =
 
 routeEval :: T.Text -> Maybe Language
 routeEval "c++" = Just (cPlusPlus "eval.cxx")
+routeEval "cpp" = Just (cPlusPlus "eval.cxx")
 routeEval "c" = Just (c "eval.c")
 routeEval "haskell" = Just (haskell "eval.hs")
 routeEval "bash" = Just (bash "eval.sh")
 routeEval "ruby" = Just (ruby "eval.rb")
 routeEval "perl" = Just (perl "eval.pl")
 routeEval "python2" = Just (python2 "eval.py")
+routeEval "python" = Just (python2 "eval.py")
 routeEval "coq" = Just (coq "eval.v")
 routeEval _ = Nothing
 

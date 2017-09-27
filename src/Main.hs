@@ -4,6 +4,7 @@ module Main where
 import Evaluate
 
 import Control.Lens
+import Control.Monad (void)
 import Control.Monad.IO.Class
 import Data.Aeson (Value)
 import Data.Aeson.Lens
@@ -63,8 +64,22 @@ postReply conf (Id ch) (SlackTimeStamp (Time pt) u) text =
              W.param "text" .~ [text]
     ts = (T.pack . show . floor . toRational $ pt) <> (T.pack $ printf ".%06d" u)
 
+postFileComment
+  :: MonadIO m
+  => SlackConfig
+  -> FileId
+  -> T.Text
+  -> m (Either T.Text Value)
+postFileComment conf (Id fid) text =
+  makeSlackCall' conf "files.comments.add" args
+  where
+    args x = x &
+             W.param "file" .~ [fid] &
+             W.param "comment" .~ [text]
+
 evalbot :: SlackBot ()
 evalbot (Message c s t ts st e) = processMessage c s t ts st e
+evalbot (FileShared ref Nothing ts) = processFileShared ref ts
 evalbot x = liftIO (print x) >> return ()
 
 processRequest :: T.Text -> IO (Maybe T.Text)
@@ -106,6 +121,33 @@ processMessage c s t ts Nothing e
         Nothing -> liftIO $ print "Message didn't match"
       return ()
 processMessage _ _ _ _ _ _ = return ()
+
+processEvalFile :: Value -> SlackSession -> Maybe (IO T.Text)
+processEvalFile v sess = do
+  let inChannels = sess ^. slackChannels
+  lang <- v ^? key "file" . key "filetype" . _String
+  code <- v ^? key "content" . _String
+  fn <- routeEval lang
+  let decodedCode = TL.toStrict . TL.toLazyText . htmlEncodedText $ code
+      filename = "/tmp/eval/" ++ T.unpack (sourceFilename fn)
+  return $ do
+    T.writeFile filename decodedCode
+    doEval fn
+
+processFileShared :: FileReference -> SlackTimeStamp -> Slack s ()
+processFileShared (FileReference f@(Id fid)) ts = do
+  conf <- use config
+  sess <- use session
+  info <- makeSlackCall' conf "files.info" (
+    \args -> args & W.param "file" .~ [fid])
+  case info of
+    Left e -> liftIO $ print e
+    Right v -> liftIO $ case processEvalFile v sess of
+      Nothing -> return ()
+      Just res -> do
+        r <- res
+        z <- postFileComment conf f ("```" <> r <> "```")
+        print z
 
 main :: IO ()
 main = do
