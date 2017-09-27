@@ -76,7 +76,7 @@ doEval lc = S.shelly . S.errExit False $ do
   r <- S.run (S.fromText "docker") [ "run", "--rm", "-v"
                                    , "/tmp/eval:/home/eval/eval", "-m"
                                    , "256m", "--kernel-memory", "64m"
-                                   , "--cpus=1.5", "--network=none", "evalbot"
+                                   , "--cpus=0.5", "--network=none", "evalbot"
                                    , "timeout", "5", "bash", "-c", cmd
                                    ]
   err <- S.lastStderr
