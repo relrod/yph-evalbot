@@ -84,9 +84,9 @@ evalbot x = liftIO (print x) >> return ()
 
 processRequest :: T.Text -> IO (Maybe T.Text)
 processRequest msg
-  | "!eval" `T.isInfixOf` msg && "```" `T.isInfixOf` msg =
-      let code = T.dropAround (== '`') . snd . T.breakOn (T.pack "```")
-                 . fst . T.breakOnEnd (T.pack "```") $ msg
+  | "!eval" `T.isInfixOf` msg && "`" `T.isInfixOf` msg =
+      let code = T.dropAround (== '`') . snd . T.breakOn (T.pack "`")
+                 . fst . T.breakOnEnd (T.pack "`") $ msg
           lang = listToMaybe . drop 1 . dropWhile (/= T.pack "!eval")
                  . T.words $ msg
       in case routeEval (fromMaybe "" lang) of

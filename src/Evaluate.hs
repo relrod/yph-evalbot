@@ -77,7 +77,7 @@ doEval lc = S.shelly . S.errExit False $ do
   let cmd = genCommand lc
   r <- S.run (S.fromText "docker") [ "run", "--rm", "-v"
                                    , "/tmp/eval:/home/eval/eval", "-m"
-                                   , "256m", "--kernel-memory", "64m"
+                                   , "512m", "--kernel-memory", "64m"
                                    , "--cpus=0.5", "--network=none", "evalbot"
                                    , "timeout", "5", "bash", "-c", cmd
                                    ]
