@@ -1,32 +1,50 @@
 name:                evalbot
 version:             0.1.0.0
-synopsis:            Eval bot for YPH Slack
+synopsis:            Eval bot for YPH discord
 -- description:
 homepage:            https://github.com/relrod/yph-evalbot/
 license:             MIT
 license-file:        LICENSE
-author:              Ricky Elrod
-maintainer:          ricky@elrod.me
-copyright:           (c) 2017 Ricky Elrod
+author:              Rick Elrod
+maintainer:          rick@elrod.me
+copyright:           (c) 2018 Rick Elrod
 category:            Web
 build-type:          Simple
 cabal-version:       >= 1.10
 
-executable evalbot
-  main-is:             Main.hs
+--executable evalbot-slack
+--  main-is:             Slack.hs
+--  -- other-modules:
+--  -- other-extensions:
+--  build-depends:       aeson
+--                     , base >= 4 && < 5
+--                     , html-entities >= 1 && < 2
+--                     , lens >= 4 && < 5
+--                     , lens-aeson >= 1 && < 2
+--                     , mtl >= 2 && < 3
+--                     , shelly >= 1.5 && < 2
+--                     , slack-api >= 0.12 && < 1
+--                     , text >= 1 && < 2
+--                     , time >= 1.5 && < 2
+--                     , transformers >= 0.5.2.0
+--                     , wreq
+--  hs-source-dirs:      src
+--  default-language:    Haskell2010
+
+executable evalbot-discord
+  main-is:             DiscordBot.hs
   -- other-modules:
   -- other-extensions:
   build-depends:       aeson
                      , base >= 4 && < 5
+                     , discord-haskell >= 0.5 && < 1
                      , html-entities >= 1 && < 2
                      , lens >= 4 && < 5
                      , lens-aeson >= 1 && < 2
                      , mtl >= 2 && < 3
                      , shelly >= 1.5 && < 2
-                     , slack-api >= 0.12 && < 1
                      , text >= 1 && < 2
                      , time >= 1.5 && < 2
                      , transformers >= 0.5.2.0
-                     , wreq
   hs-source-dirs:      src
   default-language:    Haskell2010

@@ -20,3 +20,5 @@ old
 notes
 .ghci
 cabal.config
+discord
+the-log-of-discord-haskell.txt
