@@ -64,7 +64,7 @@ routeEval _ = Nothing
 
 languages :: [T.Text]
 languages =
-  sort [ "c++", "c", "haskell", "bash", "ruby", "perl", "python2", "coq" ]
+  sort [ "cpp", "c", "haskell", "bash", "ruby", "perl", "python2", "coq" ]
 
 genCommand :: Language -> T.Text
 genCommand (Language Nothing Nothing _) = ""
